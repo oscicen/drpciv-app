@@ -1,7 +1,7 @@
 import React from "react";
 
 import CurrentQuestionContainer from "./CurrentQuestion/CurrentQuestionContainer";
-import questions from "../../../api/questions";
+import questions from "../../api/questions";
 
 const QuestionTest = ({ currentQuestion, nextQuestion }) => {
   return (
