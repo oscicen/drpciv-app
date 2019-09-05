@@ -3,19 +3,19 @@ import PropTypes from "prop-types";
 
 import "./Button.css";
 
-const Button = ({ name, isActive, handleClick }) => {
+const Button = ({ value, isActive, handleClick, params }) => {
   return (
     <button
-      onClick={() => handleClick(name)}
+      onClick={() => handleClick(params)}
       className={isActive ? "active" : null}
     >
-      {name}
+      {value}
     </button>
   );
 };
 
 Button.propTypes = {
-  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
   isActive: PropTypes.bool
 };

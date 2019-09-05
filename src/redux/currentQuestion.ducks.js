@@ -13,15 +13,15 @@ export const clearAnswer = () => ({
 const initialState = [
   {
     option: "a",
-    value: false
+    valid: false
   },
   {
     option: "b",
-    value: false
+    valid: false
   },
   {
     option: "c",
-    value: false
+    valid: false
   }
 ];
 
@@ -32,7 +32,7 @@ export const answerReducer = (state = initialState, action) => {
         if (answer.option === action.payload) {
           return {
             ...answer,
-            value: !answer.value
+            valid: !answer.valid
           };
         }
         return answer;

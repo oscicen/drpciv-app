@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { answerQuestion } from "../../redux/questionsTest.ducks";
 
 import QuestionsTest from "./QuestionsTest";
 
@@ -10,10 +11,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    nextQuestion: () => {
-      dispatch({ type: "ANSWER_QUESTION" });
+    nextQuestion: payload => {
+      dispatch(answerQuestion(payload));
       dispatch({ type: "CLEAR_ANSWER" });
-    }
+    },
+    skipQuestion: () => dispatch({ type: "SKIP_QUESTION" })
   };
 };
 

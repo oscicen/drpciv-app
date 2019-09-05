@@ -7,7 +7,8 @@ const CurrentQuestion = ({
   answer,
   changeAnswer,
   clearSelected,
-  nextQuestion
+  nextQuestion,
+  skipQuestion
 }) => {
   return (
     <div>
@@ -21,16 +22,21 @@ const CurrentQuestion = ({
       <div className="answer-options">
         {answer.map(answer => (
           <Button
-            name={answer.option}
+            value={answer.option}
+            params={answer.option}
             key={answer.option}
             handleClick={changeAnswer}
-            isActive={answer.value}
+            isActive={answer.valid}
           />
         ))}
       </div>
-      <Button name="Raspund mai tarziu" handleClick={nextQuestion} />
-      <Button name="Sterg raspunsul" handleClick={clearSelected} />
-      <Button name="Trimit raspunsul" handleClick={nextQuestion} />
+      <Button value="Raspund mai tarziu" handleClick={skipQuestion} />
+      <Button value="Sterg raspunsul" handleClick={clearSelected} />
+      <Button
+        value="Trimit raspunsul"
+        handleClick={nextQuestion}
+        params={answer}
+      />
     </div>
   );
 };

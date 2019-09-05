@@ -1,10 +1,7 @@
 import { createStore, combineReducers } from "redux";
-import createSagaMiddleware from "redux-saga";
 
 import { testReducer } from "./questionsTest.ducks";
 import { answerReducer } from "./currentQuestion.ducks";
-
-const sagaMiddleware = createSagaMiddleware();
 
 const reducer = combineReducers({
   questions: testReducer,
