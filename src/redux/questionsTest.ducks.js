@@ -10,36 +10,50 @@ export const answerQuestion = payload => {
   };
 };
 
+const unanswered = questions.map(item => item.id);
+const startQuestion = questions[0].id;
+
 const initialState = {
   onTime: true,
   timeLeft: 30,
-  currentQuestion: 0,
-  correct: 0,
-  wrong: 0
+  unanswered,
+  currentQuestion: startQuestion,
+  correct: [],
+  wrong: []
 };
 
 export const testReducer = (state = initialState, action) => {
   switch (action.type) {
     case ANSWER_QUESTION:
-      const isUnanswered = action.payload.every(item => {
-        return !item.valid;
-      });
+      const isUnanswered = action.payload.every(item => !item.valid);
       const answerToCheck = questions[state.currentQuestion].answers;
-      const isCorretct = action.payload.every((item, index) => {
-        return item.valid === answerToCheck[index].valid;
-      });
+      const isCorretct = action.payload.every(
+        (item, index) => item.valid === answerToCheck[index].valid
+      );
       if (!isUnanswered) {
         if (isCorretct) {
           return {
             ...state,
-            currentQuestion: state.currentQuestion + 1,
-            correct: state.correct + 1
+            unanswered: state.unanswered.filter(
+              item => item !== state.currentQuestion
+            ),
+            currentQuestion:
+              state.unanswered[
+                state.unanswered.indexOf(state.currentQuestion) + 1
+              ],
+            correct: [...state.correct, state.currentQuestion]
           };
         } else {
           return {
             ...state,
-            currentQuestion: state.currentQuestion + 1,
-            wrong: state.wrong + 1
+            unanswered: state.unanswered.filter(
+              item => item !== state.currentQuestion
+            ),
+            currentQuestion:
+              state.unanswered[
+                state.unanswered.indexOf(state.currentQuestion) + 1
+              ],
+            wrong: [...state.wrong, state.currentQuestion]
           };
         }
       } else {
