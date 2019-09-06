@@ -5,7 +5,8 @@ import QuestionsTest from "./QuestionsTest";
 
 const mapStateToProps = state => {
   return {
-    currentQuestion: state.questions.currentQuestion
+    questionState: state.questions,
+    isTestEnded: state.questions.unanswered.length === 0 ? false : true
   };
 };
 
@@ -15,7 +16,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(answerQuestion(payload));
       dispatch({ type: "CLEAR_ANSWER" });
     },
-    skipQuestion: () => dispatch({ type: "SKIP_QUESTION" })
+    skipQuestion: () => {
+      dispatch({ type: "SKIP_QUESTION" });
+      dispatch({ type: "CLEAR_ANSWER" });
+    }
   };
 };
 

@@ -23,24 +23,29 @@ const initialState = {
 };
 
 export const testReducer = (state = initialState, action) => {
+  const nextQuestion =
+    state.unanswered.indexOf(state.currentQuestion) + 1 >=
+    state.unanswered.length
+      ? state.unanswered[0]
+      : state.unanswered[state.unanswered.indexOf(state.currentQuestion) + 1];
+
   switch (action.type) {
     case ANSWER_QUESTION:
       const isUnanswered = action.payload.every(item => !item.valid);
-      const answerToCheck = questions[state.currentQuestion].answers;
-      const isCorretct = action.payload.every(
+      const answerToCheck = questions.find(
+        item => item.id === state.currentQuestion
+      ).answers;
+      const isCorrect = action.payload.every(
         (item, index) => item.valid === answerToCheck[index].valid
       );
       if (!isUnanswered) {
-        if (isCorretct) {
+        if (isCorrect) {
           return {
             ...state,
             unanswered: state.unanswered.filter(
               item => item !== state.currentQuestion
             ),
-            currentQuestion:
-              state.unanswered[
-                state.unanswered.indexOf(state.currentQuestion) + 1
-              ],
+            currentQuestion: nextQuestion,
             correct: [...state.correct, state.currentQuestion]
           };
         } else {
@@ -49,10 +54,7 @@ export const testReducer = (state = initialState, action) => {
             unanswered: state.unanswered.filter(
               item => item !== state.currentQuestion
             ),
-            currentQuestion:
-              state.unanswered[
-                state.unanswered.indexOf(state.currentQuestion) + 1
-              ],
+            currentQuestion: nextQuestion,
             wrong: [...state.wrong, state.currentQuestion]
           };
         }
@@ -62,7 +64,7 @@ export const testReducer = (state = initialState, action) => {
     case SKIP_QUESTION:
       return {
         ...state,
-        currentQuestion: state.currentQuestion + 1
+        currentQuestion: nextQuestion
       };
     default:
       return state;
