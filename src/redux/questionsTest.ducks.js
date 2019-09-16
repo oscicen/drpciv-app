@@ -2,6 +2,7 @@ import questions from "../api/questions";
 
 export const ANSWER_QUESTION = "ANSWER_QUESTION";
 export const SKIP_QUESTION = "SKIP_QUESTION";
+export const SET_COUNTDOWN = "SET_COUNTDOWN";
 
 export const answerQuestion = payload => {
   return {
@@ -15,7 +16,11 @@ const startQuestion = questions[0].id;
 
 const initialState = {
   onTime: true,
-  timeLeft: 30,
+  timeLeft: {
+    min: 3,
+    sec: 0,
+    on: true
+  },
   unanswered,
   currentQuestion: startQuestion,
   correct: [],
@@ -66,6 +71,45 @@ export const testReducer = (state = initialState, action) => {
         ...state,
         currentQuestion: nextQuestion
       };
+    case SET_COUNTDOWN:
+      if (state.timeLeft.min > 0) {
+        if (state.timeLeft.sec > 0) {
+          return {
+            ...state,
+            timeLeft: {
+              ...state.timeLeft,
+              sec: state.timeLeft.sec - 1
+            }
+          };
+        } else if (state.timeLeft.sec === 0) {
+          return {
+            ...state,
+            timeLeft: {
+              ...state.timeLeft,
+              min: state.timeLeft.min - 1,
+              sec: 59
+            }
+          };
+        }
+      } else if (state.timeLeft.min === 0 && state.timeLeft.sec > 1) {
+        return {
+          ...state,
+          timeLeft: {
+            ...state.timeLeft,
+            sec: state.timeLeft.sec - 1
+          }
+        };
+      } else {
+        return {
+          ...state,
+          timeLeft: {
+            ...state.timeLeft,
+            sec: state.timeLeft.sec - 1,
+            on: false
+          }
+        };
+      }
+      break;
     default:
       return state;
   }

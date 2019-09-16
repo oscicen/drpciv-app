@@ -3,6 +3,9 @@ import QuestionsTestContainer from "./components/QuestionsTest/QuestionsTestCont
 
 import "./styles.css";
 
-const App = () => <QuestionsTestContainer />;
-
+const App = () => (
+  <div className="App">
+    <QuestionsTestContainer />
+  </div>
+);
 export default App;
