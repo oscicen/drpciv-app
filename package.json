@@ -5,14 +5,17 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "assert": "^2.0.0",
+    "axios": "^0.19.0",
     "enzyme": "3.10.0",
+    "mongodb": "^3.3.2",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-redux": "7.1.1",
     "react-scripts": "3.0.1",
     "redux": "4.0.4",
-    "redux-saga": "1.0.5"
+    "redux-saga": "^1.0.5"
   },
   "devDependencies": {
     "typescript": "3.3.3"

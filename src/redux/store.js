@@ -1,6 +1,7 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import createSagaMiddleware from "redux-saga";
 
-import { testReducer } from "./questionsTest.ducks";
+import { testReducer, watcherQuestions } from "./questionsTest.ducks";
 import { answerReducer } from "./currentQuestion.ducks";
 
 const reducer = combineReducers({
@@ -8,9 +9,10 @@ const reducer = combineReducers({
   answer: answerReducer
 });
 
-const store = createStore(
-  reducer /* preloadedState, */,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(watcherQuestions);
 
 export default store;

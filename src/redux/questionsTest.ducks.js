@@ -1,8 +1,15 @@
+import { call, put, all, takeLatest } from "redux-saga/effects";
+
 import questions from "../api/questions";
+import getQuestions from "../api/getQuestions";
 
 export const ANSWER_QUESTION = "ANSWER_QUESTION";
 export const SKIP_QUESTION = "SKIP_QUESTION";
 export const SET_COUNTDOWN = "SET_COUNTDOWN";
+
+export const GET_QUESTIONS_REQUESTED = "GET_QUESTIONS_REQUESTED";
+export const GET_QUESTIONS_SUCCESS = "GET_QUESTIONS_SUCCESS";
+export const GET_QUESTIONS_FAILED = "GET_QUESTIONS_FAILED";
 
 export const answerQuestion = payload => {
   return {
@@ -10,6 +17,25 @@ export const answerQuestion = payload => {
     payload
   };
 };
+
+export const questionsW = () => ({
+  type: GET_QUESTIONS_REQUESTED,
+  payload: ""
+});
+
+export function* workerQuestions({ payload }) {
+  try {
+    const questionsr = yield call(getQuestions, payload);
+    console.log(questionsr);
+    yield put({ type: GET_QUESTIONS_SUCCESS, payload: questions });
+  } catch (error) {
+    yield put({ type: GET_QUESTIONS_FAILED, payload: error.message });
+  }
+}
+
+export function* watcherQuestions() {
+  yield all(takeLatest(GET_QUESTIONS_REQUESTED, workerQuestions));
+}
 
 const unanswered = questions.map(item => item.id);
 const startQuestion = questions[0].id;
@@ -110,6 +136,21 @@ export const testReducer = (state = initialState, action) => {
         };
       }
       break;
+    case GET_QUESTIONS_REQUESTED:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case GET_QUESTIONS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      };
+    case GET_QUESTIONS_FAILED:
+      return {
+        ...state,
+        isLoading: false
+      };
     default:
       return state;
   }
