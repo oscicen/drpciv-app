@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
 
 import { testReducer, watcherQuestions } from "./questionsTest.ducks";
@@ -11,7 +11,11 @@ const reducer = combineReducers({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  reducer,
+  /* preloadedState, */ composeEnhancers(applyMiddleware(sagaMiddleware))
+);
 
 sagaMiddleware.run(watcherQuestions);
 

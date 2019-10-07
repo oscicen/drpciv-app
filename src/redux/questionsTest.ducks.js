@@ -1,4 +1,4 @@
-import { call, put, all, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 
 import questions from "../api/questions";
 import getQuestions from "../api/getQuestions";
@@ -18,29 +18,31 @@ export const answerQuestion = payload => {
   };
 };
 
-export const questionsW = () => ({
-  type: GET_QUESTIONS_REQUESTED,
-  payload: ""
-});
+export const getQuestionData = () => ({ type: GET_QUESTIONS_REQUESTED });
 
-export function* workerQuestions({ payload }) {
+export function* workerQuestions(action) {
   try {
-    const questionsr = yield call(getQuestions, payload);
-    console.log(questionsr);
-    yield put({ type: GET_QUESTIONS_SUCCESS, payload: questions });
+    const qData = yield call(
+      getQuestions,
+      "http://www.mocky.io/v2/5d91fd3b310000ee9210cc6f"
+    );
+    yield put({ type: GET_QUESTIONS_SUCCESS, payload: qData.data });
   } catch (error) {
     yield put({ type: GET_QUESTIONS_FAILED, payload: error.message });
   }
 }
 
 export function* watcherQuestions() {
-  yield all(takeLatest(GET_QUESTIONS_REQUESTED, workerQuestions));
+  yield takeLatest(GET_QUESTIONS_REQUESTED, workerQuestions);
 }
 
 const unanswered = questions.map(item => item.id);
 const startQuestion = questions[0].id;
 
 const initialState = {
+  data: [],
+  error: "",
+  isLoading: false,
   onTime: true,
   timeLeft: {
     min: 3,
@@ -144,12 +146,14 @@ export const testReducer = (state = initialState, action) => {
     case GET_QUESTIONS_SUCCESS:
       return {
         ...state,
+        data: [...action.payload],
         isLoading: false
       };
     case GET_QUESTIONS_FAILED:
       return {
         ...state,
-        isLoading: false
+        isLoading: false,
+        error: action.payload
       };
     default:
       return state;

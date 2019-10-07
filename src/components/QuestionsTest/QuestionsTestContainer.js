@@ -1,5 +1,8 @@
 import { connect } from "react-redux";
-import { answerQuestion } from "../../redux/questionsTest.ducks";
+import {
+  answerQuestion,
+  getQuestionData
+} from "../../redux/questionsTest.ducks";
 
 import QuestionsTest from "./QuestionsTest";
 
@@ -21,7 +24,8 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: "SKIP_QUESTION" });
       dispatch({ type: "CLEAR_ANSWER" });
     },
-    tick: () => dispatch({ type: "SET_COUNTDOWN" })
+    tick: () => dispatch({ type: "SET_COUNTDOWN" }),
+    getQuestionData: () => dispatch(getQuestionData())
   };
 };
 

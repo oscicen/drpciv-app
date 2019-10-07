@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 
+import Loading from "../Loading/Loading";
 import CurrentQuestionContainer from "./CurrentQuestion/CurrentQuestionContainer";
 import Ending from "./CurrentQuestion/Ending";
+
 import questions from "../../api/questions";
 
 const QuestionTest = ({
@@ -9,7 +11,8 @@ const QuestionTest = ({
   nextQuestion,
   skipQuestion,
   isTestEnded,
-  tick
+  tick,
+  getQuestionData
 }) => {
   useEffect(() => {
     if (questionState.timeLeft.on && questionState.unanswered.length !== 0) {
@@ -21,6 +24,12 @@ const QuestionTest = ({
     }
   });
 
+  useEffect(() => {
+    getQuestionData();
+  }, []);
+
+  const qqq = questionState.data;
+
   const question = questions.find(
     item => item.id === questionState.currentQuestion
   );
@@ -31,28 +40,31 @@ const QuestionTest = ({
       return time;
     }
   };
+
   return (
-    <div>
+    <Loading isLoading={questionState.isLoading} error={questionState.error}>
       <div>
-        <p>
-          Întrebări rămase: {questionState.unanswered.length}, din{" "}
-          {questions.length}, {questionState.correct.length} corecte,
-          {questionState.wrong.length} greşite. Timp rămas:{" "}
-          {`${twoDigitsTimer(questionState.timeLeft.min)}:${twoDigitsTimer(
-            questionState.timeLeft.sec
-          )}`}
-        </p>
+        <div>
+          <p>
+            Întrebări rămase: {questionState.unanswered.length}, din{" "}
+            {questions.length}, {questionState.correct.length} corecte,
+            {questionState.wrong.length} greşite. Timp rămas:{" "}
+            {`${twoDigitsTimer(questionState.timeLeft.min)}:${twoDigitsTimer(
+              questionState.timeLeft.sec
+            )}`}
+          </p>
+        </div>
+        {isTestEnded ? (
+          <CurrentQuestionContainer
+            question={question}
+            nextQuestion={nextQuestion}
+            skipQuestion={skipQuestion}
+          />
+        ) : (
+          <Ending message="Test has ended." />
+        )}
       </div>
-      {isTestEnded ? (
-        <CurrentQuestionContainer
-          question={question}
-          nextQuestion={nextQuestion}
-          skipQuestion={skipQuestion}
-        />
-      ) : (
-        <Ending message="Test has ended." />
-      )}
-    </div>
+    </Loading>
   );
 };
 
